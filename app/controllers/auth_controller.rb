@@ -1,5 +1,5 @@
 class AuthController < ApplicationController
-  skip_before_action :require_login, only: [:login, :auto_login]
+  skip_before_action :require_login, only: [:login, :auto_login, :logout]
   def login
     user = User.find_by(username: params[:username])
     if user && user.authenticate(params[:password])
@@ -17,6 +17,14 @@ class AuthController < ApplicationController
     else
       render json: {message: "No user is currently logged in"}
     end
+  end
+
+  def logout
+    reset_session
+    render json: {
+      logged_out: true,
+      status: 200
+    }
   end
 
   def user_is_authed
