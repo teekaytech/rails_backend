@@ -5,7 +5,7 @@ class AuthController < ApplicationController
     if user && user.authenticate(params[:password])
         payload = {user_id: user.id}
         token = encode_token(payload)
-        render json: {user: user, jwt: token, success: "Welcome back, #{user.username}"}
+        render json: {user: user, jwt: token, success: "Welcome back, #{user.username}", status: 'logged_in'}
     else
         render json: {failure: "Log in failed! Username or password invalid!"}
     end
@@ -13,7 +13,7 @@ class AuthController < ApplicationController
 
   def auto_login
     if session_user
-      render json: session_user
+      render json: { status: 'logged_in', user: session_user }
     else
       render json: {errors: "No User Logged In"}
     end
